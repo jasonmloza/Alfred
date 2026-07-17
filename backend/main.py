@@ -1,11 +1,24 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import ollama
 
 app = FastAPI()
 
+# Lets the frontend (opened as a local file, or served from another port)
+# call this API from the browser. Tighten allow_origins before deploying
+# this publicly — "*" is fine for local hackathon dev.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 class ChatRequest(BaseModel):
     message: str
+
 
 @app.get("/")
 def home():
@@ -13,6 +26,7 @@ def home():
         "assistant": "Alfred",
         "status": "online"
     }
+
 
 @app.post("/chat")
 def chat(request: ChatRequest):
@@ -32,7 +46,6 @@ def chat(request: ChatRequest):
             }
         ]
     )
-
     return {
         "response": response["message"]["content"]
     }
