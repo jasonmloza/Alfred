@@ -1,13 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Optional, List, Any
 import ollama
 
 app = FastAPI()
 
-# Lets the frontend (opened as a local file, or served from another port)
-# call this API from the browser. Tighten allow_origins before deploying
-# this publicly — "*" is fine for local hackathon dev.
+# Allow frontend access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,6 +17,8 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     message: str
+    attachments: Optional[List[Any]] = None
+    conversation_id: Optional[str] = None
 
 
 @app.get("/")
@@ -28,8 +29,9 @@ def home():
     }
 
 
-@app.post("/chat")
+@app.post("/api/chat")
 def chat(request: ChatRequest):
+
     response = ollama.chat(
         model="llama3.2:3b",
         messages=[
@@ -46,6 +48,19 @@ def chat(request: ChatRequest):
             }
         ]
     )
+
     return {
-        "response": response["message"]["content"]
+        "response": response["message"]["content"],
+        "conversation_id": request.conversation_id,
+        "model": "llama3.2:3b"
+    }
+
+
+@app.post("/api/upload")
+def upload(file: dict):
+    return {
+        "filename": file.get("name"),
+        "type": file.get("type"),
+        "size": file.get("size"),
+        "content": file.get("content")
     }
