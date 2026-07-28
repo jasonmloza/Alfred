@@ -1,8 +1,15 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Any
-import ollama
+from dotenv import load_dotenv
+from google import genai
+
+load_dotenv()
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 app = FastAPI()
 
@@ -31,28 +38,20 @@ def home():
 
 @app.post("/api/chat")
 def chat(request: ChatRequest):
+    system_prompt = (
+        "You are Alfred, an intelligent personal AI assistant. "
+        "Be concise, helpful, friendly, and think step by step when needed."
+    )
 
-    response = ollama.chat(
-        model="llama3.2:3b",
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are Alfred, an intelligent personal AI assistant. "
-                    "Be concise, helpful, friendly, and think step by step when needed."
-                )
-            },
-            {
-                "role": "user",
-                "content": request.message
-            }
-        ]
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=f"{system_prompt}\n\nUser: {request.message}"
     )
 
     return {
-        "response": response["message"]["content"],
+        "response": response.text,
         "conversation_id": request.conversation_id,
-        "model": "llama3.2:3b"
+        "model": "gemini-2.5-flash"
     }
 
 
