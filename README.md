@@ -4,271 +4,225 @@
 
 A private, customizable AI assistant powered by local AI models.
 
-Inspired by futuristic assistants like JARVIS, Alfred combines a modern React interface, a FastAPI backend, and local AI inference using Ollama.
-
-The mission of Alfred is to create a powerful personal AI companion that can understand conversations, assist with tasks, and continuously evolve with new capabilities.
+Inspired by futuristic assistants like JARVIS, Alfred combines a modern React interface, a FastAPI backend, and local AI inference using Ollama. Alfred is built around a simple principle: **powerful AI should run on your own machine, privately, without sending your data anywhere.**
 
 ---
 
-# ✨ Features
+## ⚡ Hackathon Note
 
-## Current Features
+The frontend is currently configured to call a hosted backend at `https://alfred-cqac.onrender.com` so that hackathon participants can try Alfred without needing to run anything locally.
 
-✅ AI-powered conversations  
-✅ Local AI inference using Ollama  
-✅ FastAPI backend  
-✅ React + TypeScript interface  
-✅ REST API communication  
-✅ Real-time chat responses  
-✅ Private local AI processing  
-✅ Modular architecture  
-✅ Conversation management system  
+**Alfred was designed to be fully local.** The Render deployment is a temporary convenience — Alfred's real home is your machine. If you want to run it the way it was meant to be run, follow the local setup instructions below and change `API_BASE_URL` back in `frontend/src/lib/api.ts`:
 
-## Planned Features
+```ts
+// For local development (default / intended)
+export const API_BASE_URL = "http://localhost:8000";
 
-🚧 Voice interaction  
-🚧 Text-to-speech responses  
-🚧 Long-term memory  
-🚧 Personal preferences  
-🚧 Tool integrations  
-🚧 Desktop application  
-🚧 Mobile companion app  
-🚧 Autonomous task execution  
+// For the hackathon hosted demo
+export const API_BASE_URL = "https://alfred-cqac.onrender.com";
+```
 
 ---
 
-# 🧠 How Alfred Works
+## ✨ Features
+
+### Current
+
+- ✅ AI-powered conversations
+- ✅ Local AI inference using Ollama
+- ✅ FastAPI backend
+- ✅ React + TypeScript interface
+- ✅ Real-time chat responses
+- ✅ Private local AI processing
+- ✅ Modular architecture
+- ✅ Conversation management system
+
+### Planned
+
+- 🚧 Voice interaction & text-to-speech
+- 🚧 Long-term memory
+- 🚧 Personal preferences
+- 🚧 Tool integrations
+- 🚧 Desktop & mobile companion app
+- 🚧 Autonomous task execution
+
+---
+
+## 🧠 How Alfred Works
+
+```
 User
-
-↓
-
-Alfred Interface
-(React + TypeScript)
-
-↓
-
+ ↓
+Alfred Interface (React + TypeScript)
+ ↓
 FastAPI Backend
-
-↓
-
+ ↓
 Ollama AI Engine
-
-↓
-
-Local Language Model
-(llama3.2:3b)
-
-↓
-
+ ↓
+Local Language Model (llama3.2:3b)
+ ↓
 Alfred Response
+```
 
-Alfred processes messages through a FastAPI API, sends them to a local language model through Ollama, and returns an intelligent response.
+Alfred processes messages through a FastAPI API, sends them to a local language model through Ollama, and returns an intelligent response — all on your own hardware.
 
 ---
 
-# 🏗️ Architecture
+## 🏗️ Architecture
+
+```
 Alfred/
-│
 ├── backend/
-│ └── main.py
-│
+│   └── main.py
 ├── frontend/
-│ ├── src/
-│ ├── components/
-│ ├── hooks/
-│ └── package.json
-│
+│   ├── src/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── lib/
+│   │       └── api.ts        ← API_BASE_URL lives here
+│   └── package.json
 ├── requirements.txt
-│
-├── README.md
-│
-└── .gitignore
+└── README.md
+```
 
 ---
 
-# 🛠️ Tech Stack
+## 🛠️ Tech Stack
 
-## Backend
+**Backend**
+- Python, FastAPI, Uvicorn
 
-- Python
-- FastAPI
-- Uvicorn
+**AI**
+- Ollama, llama3.2:3b
 
-## Artificial Intelligence
-
-- Ollama
-- Local Large Language Models (LLMs)
-- llama3.2:3b
-
-## Frontend
-
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- Framer Motion
-
-## Development
-
-- Git
-- GitHub
-- VS Code
+**Frontend**
+- React, TypeScript, Vite, Tailwind CSS, Framer Motion
 
 ---
 
-# 🚀 Installation
+## 🚀 Local Setup (Recommended)
 
-## Prerequisites
-
-Install:
+### Prerequisites
 
 - Python 3.10+
 - Node.js
 - Git
-- Ollama
+- [Ollama](https://ollama.com)
 
----
-
-# 1. Clone Alfred
+### 1. Clone Alfred
 
 ```bash
 git clone https://github.com/jasonmloza/Alfred.git
-
 cd Alfred
-2. Backend Setup
+```
 
-Create virtual environment:
+### 2. Backend Setup
 
-Windows:
-
+```bash
+# Create and activate virtual environment
 python -m venv venv
 
+# Windows
 venv\Scripts\activate
 
-Install dependencies:
+# macOS / Linux
+source venv/bin/activate
 
 pip install -r requirements.txt
-3. Setup Ollama
+```
 
-Install Ollama:
+### 3. Setup Ollama
 
-https://ollama.com
-
-Download Alfred's AI model:
-
+```bash
+# Pull Alfred's AI model
 ollama pull llama3.2:3b
 
-Start Ollama:
-
+# Start Ollama
 ollama serve
-4. Start Backend
+```
 
-From the Alfred folder:
+### 4. Start Backend
 
+```bash
 uvicorn backend.main:app --reload
+```
 
-Backend runs at:
+Backend runs at `http://127.0.0.1:8000`  
+API docs at `http://127.0.0.1:8000/docs`
 
-http://127.0.0.1:8000
+### 5. Start Frontend
 
-API documentation:
-
-http://127.0.0.1:8000/docs
-5. Start Frontend
-
-Open another terminal:
-
+```bash
 cd frontend
-
 npm install
-
 npm run dev
+```
 
-Frontend runs at:
+Frontend runs at `http://localhost:5173`
 
-http://localhost:5173
-📡 API
-Chat Endpoint
-POST /api/chat
+> Make sure `API_BASE_URL` in `frontend/src/lib/api.ts` is set to `http://localhost:8000` for local use.
 
-Example request:
+---
 
-{
-  "message": "Hello Alfred"
-}
+## 📡 API
 
-Example response:
+**POST** `/api/chat`
 
-{
-  "response": "Hello! How can I help you today?",
-  "model": "llama3.2:3b"
-}
-📸 Screenshots
+```json
+// Request
+{ "message": "Hello Alfred" }
 
-Coming soon.
+// Response
+{ "response": "Hello! How can I help you today?", "model": "llama3.2:3b" }
+```
 
-🎥 Demo
+---
 
-Coming soon.
+## 🌟 Project Journey
 
-A full demonstration of Alfred's AI capabilities will be available soon.
+Alfred started as an idea: a personal AI assistant inspired by fictional assistants like JARVIS — but private, local, and yours.
 
-🌟 Project Journey
+- ✅ FastAPI backend built
+- ✅ Ollama integration added
+- ✅ Local AI model running
+- ✅ React frontend built
+- ✅ Frontend connected to backend
+- ✅ Alfred successfully responding
+- 🔜 Memory system
+- 🔜 Voice capabilities
+- 🔜 Autonomous tools
 
-Alfred started as an idea: creating a personal AI assistant inspired by fictional assistants like JARVIS.
+---
 
-Development milestones:
+## 🎯 Vision
 
-✅ Project created
-✅ FastAPI backend built
-✅ Ollama integration added
-✅ Local AI model running
-✅ Chat API created
-✅ React frontend built
-✅ Frontend connected to backend
-✅ Alfred successfully responding
+Alfred is built around the idea that powerful AI should be private, customizable, and run on your own device. The long-term goal is a fully capable personal AI companion that understands context, remembers useful information, interacts through voice, and connects with your tools — all without leaving your machine.
 
-🔜 Adding memory
-🔜 Adding voice capabilities
-🔜 Adding autonomous tools
+---
 
-🎯 Vision
+## 👨‍💻 Developer
 
-The long-term vision for Alfred is to create a powerful personal AI companion that can:
+Built by [Jason Mloza](https://github.com/jasonmloza)
 
-Understand natural conversations
-Remember useful information
-Assist with daily tasks
-Interact through voice
-Connect with external tools
-Run privately on personal devices
+---
 
-Alfred is built around the idea that powerful AI assistants should be private, customizable, and accessible.
-
-👨‍💻 Developer
-
-Built by Jason Mloza
-
-GitHub:
-
-https://github.com/jasonmloza
-
-🤝 Contributing
+## 🤝 Contributing
 
 Contributions, suggestions, and ideas are welcome.
 
-To contribute:
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Open a pull request
 
-Fork the repository
-Create a feature branch
-Commit your changes
-Open a pull request
-📜 License
+---
+
+## 📜 License
 
 MIT License
 
-⭐ Support
+---
+
+## ⭐ Support
 
 If you like Alfred, consider starring the repository ⭐
-
-Every star helps support the development of Alfred.
