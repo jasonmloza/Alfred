@@ -6,7 +6,7 @@
  * For production: https://your-server.com
  */
 
-export const API_BASE_URL = 'http://localhost:8000';
+export const API_BASE_URL = "https://alfred-cqac.onrender.com";
 
 export const API_ENDPOINTS = {
   chat: `${API_BASE_URL}/api/chat`,
