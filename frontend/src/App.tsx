@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useConversations } from './hooks/useConversations';
 import { useChat } from './hooks/useChat';
-import { Sidebar } from './components/Sidebar';
+import { Sidebar } from './components/sidebar';
 import { ChatView } from './components/ChatView';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import type { Attachment } from './types';
