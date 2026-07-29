@@ -1,6 +1,6 @@
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Any
@@ -13,10 +13,10 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 app = FastAPI()
 
-# Allow frontend access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -43,16 +43,18 @@ def chat(request: ChatRequest):
         "Be concise, helpful, friendly, and think step by step when needed."
     )
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=f"{system_prompt}\n\nUser: {request.message}"
-    )
-
-    return {
-        "response": response.text,
-        "conversation_id": request.conversation_id,
-        "model": "gemini-2.0-flash"
-    }
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=f"{system_prompt}\n\nUser: {request.message}"
+        )
+        return {
+            "response": response.text,
+            "conversation_id": request.conversation_id,
+            "model": "gemini-2.0-flash"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/api/upload")
