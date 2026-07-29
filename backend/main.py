@@ -44,14 +44,14 @@ def chat(request: ChatRequest):
     )
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.0-flash",
         contents=f"{system_prompt}\n\nUser: {request.message}"
     )
 
     return {
         "response": response.text,
         "conversation_id": request.conversation_id,
-        "model": "gemini-2.5-flash"
+        "model": "gemini-2.0-flash"
     }
 
 
